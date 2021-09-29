@@ -4,14 +4,14 @@ import json
 import pickle
 from flask_cors import cross_origin
 
+
 app = Flask(__name__)
-model = pickle.load(open('rf.pkl', 'rb'))
 
-@app.route('/')
-def hello():
-    return 'Hello World'
+@app.route("/")
+def index():
+    return 'Hello World!'
 
-# geting and sending response to dialogflow
+# getting and sending response to dialogflow
 @app.route('/webhook', methods=['POST'])
 @cross_origin()
 def webhook():
@@ -28,7 +28,6 @@ def webhook():
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
-
 
 # processing the request from dialogflow
 def processRequest(req):
@@ -49,9 +48,8 @@ def processRequest(req):
     intent = result.get("intent").get('displayName')
     
     if (intent=='IrisData'):
-        prediction = model.predict(final_features)
     
-        output = round(prediction[0], 2)
+        output = 0
     
     	
         if(output==0):
@@ -72,8 +70,4 @@ def processRequest(req):
     #    log.write_log(sessionID, "Bot Says: " + result.fulfillmentText)
 
 if __name__ == '__main__':
-    app.run()
-#if __name__ == '__main__':
- #   port = int(os.getenv('PORT', 5000))
-  #  print("Starting app on port %d" % port)
-   # app.run(debug=False, port=port, host='0.0.0.0')
+    app.run(debug=True)
